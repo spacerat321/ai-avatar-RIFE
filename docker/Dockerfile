@@ -1,23 +1,37 @@
-FROM python:3.8-slim
+# -------------------------
+# Base: CUDA 11.8 + cuDNN8 + Ubuntu 22.04
+# -------------------------
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
-# install deps
-RUN apt-get update && apt-get -y install \
-    bash ffmpeg
+# -------------------------
+# System setup
+# -------------------------
+ENV DEBIAN_FRONTEND=noninteractive
+WORKDIR /workspace
 
-# setup RIFE
-WORKDIR /rife
-COPY . .
-RUN pip3 install -r requirements.txt
+# Install OS dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.10 python3.10-venv python3.10-dev python3-pip \
+    git ffmpeg libsm6 libxext6 libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
 
-ADD docker/inference_img /usr/local/bin/inference_img
-RUN chmod +x /usr/local/bin/inference_img
-ADD docker/inference_video /usr/local/bin/inference_video
-RUN chmod +x /usr/local/bin/inference_video
+# Ensure python and pip default to Python 3.10
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1 && \
+    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
-# add pre-trained models
-COPY train_log /rife/train_log
+# -------------------------
+# Copy source code
+# -------------------------
+COPY . /workspace
 
-WORKDIR /host
-ENTRYPOINT ["/bin/bash"]
+# -------------------------
+# Install Python dependencies
+# -------------------------
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
-ENV NVIDIA_DRIVER_CAPABILITIES all
+# -------------------------
+# Default command
+# -------------------------
+ENTRYPOINT ["python", "inference_video.py"]

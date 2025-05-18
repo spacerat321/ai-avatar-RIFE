@@ -1,7 +1,22 @@
-numpy>=1.16, <=1.23.5
-tqdm>=4.35.0 
-sk-video>=1.1.10 
-torch>=1.6.0 
-opencv-python>=4.1.2 
-moviepy>=1.0.3 
-torchvision>=0.7.0
+# ----------------------------
+# Torch and CUDA stack (GPU-enabled)
+# ----------------------------
+torch==2.0.1+cu118                # PyTorch with CUDA 11.8 (core deep learning framework)
+torchvision==0.15.2+cu118         # Image processing and models for Torch
+--extra-index-url https://download.pytorch.org/whl/cu118  # Ensures correct Torch CUDA wheels are found
+
+# ----------------------------
+# Scientific computing (conflict-resolved)
+# ----------------------------
+numpy==1.23.5                     # Core numerical operations (compatible with numba and torch)
+numba==0.56.4                     # JIT compiler for numpy-heavy operations (inference optimizations)
+
+# ----------------------------
+# Video and media handling
+# ----------------------------
+moviepy                          # Video/audio editing used in audio transfer routines
+scikit-video                     # Video reading/writing (e.g., skvideo.io.vreader for .mp4)
+opencv-python-headless           # Image and video I/O without GUI backend (safer in Docker/server environments)
+future                           # Python 2/3 compatibility layer
+tqdm                             # Progress bar utility for loops and batch operations
+

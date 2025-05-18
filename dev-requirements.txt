@@ -1,0 +1,20 @@
+# ----------------------------
+# Testing tools
+# ----------------------------
+pytest>=7.2.0            # Core test framework for unit and integration tests
+pytest-cov>=4.0.0        # Generates test coverage reports
+
+# ----------------------------
+# Jupyter development
+# ----------------------------
+jupyterlab>=3.6.0        # Modern interactive notebook interface
+ipykernel                # Kernel interface for Jupyter notebooks
+ipython                  # Rich interactive shell experience
+notebook                 # Legacy Jupyter Notebook server (fallback support)
+
+# ----------------------------
+# Code quality and formatting
+# ----------------------------
+black                    # Automatic Python code formatter
+flake8                   # Linting tool for enforcing code style
+isort                    # Automatically sorts and organizes imports
