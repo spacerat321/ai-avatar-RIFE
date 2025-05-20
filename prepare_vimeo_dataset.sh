@@ -7,18 +7,22 @@ PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
 TRAINLIST_FILE="$DATA_ROOT/tri_trainlist.txt"
 TESTLIST_FILE="$DATA_ROOT/tri_testlist.txt"
 
-# Select dataset: septuplet or triplet
 DATASET=${1:-septuplet}
 echo "Selected dataset: $DATASET"
 echo "Using data root: $DATA_ROOT"
 
 pip install --quiet tqdm Pillow
 
-# Create central dataset directory
-sudo mkdir -p "$DATA_ROOT"
-sudo chown "$USER":"$USER" "$DATA_ROOT"
+# === Create central dataset directory if needed ===
+if [ ! -d "$DATA_ROOT" ]; then
+    echo "Creating data root at $DATA_ROOT"
+    sudo mkdir -p "$DATA_ROOT"
+    sudo chown "$USER":"$USER" "$DATA_ROOT"
+else
+    echo "Data root already exists: $DATA_ROOT"
+fi
 
-# Download and unzip helper
+# === Helper to download and extract archives ===
 download_and_extract() {
   local url=$1
   local filename=$2
@@ -41,7 +45,7 @@ download_and_extract() {
   cd "$PROJECT_ROOT"
 }
 
-# Septuplet: requires conversion
+# === Septuplet dataset logic ===
 if [[ "$DATASET" == "septuplet" ]]; then
   download_and_extract "http://data.csail.mit.edu/tofu/dataset/vimeo_septuplet.zip" "vimeo_septuplet.zip" "vimeo_septuplet"
 
@@ -88,7 +92,7 @@ print(f"Triplet conversion complete. Skipped {skipped} clips.")
 print(f"Triplets stored in: {output_root}")
 EOF
 
-# Triplet: direct copy
+# === Triplet dataset logic ===
 elif [[ "$DATASET" == "triplet" ]]; then
   download_and_extract "http://data.csail.mit.edu/tofu/dataset/vimeo_triplet.zip" "vimeo_triplet.zip" "vimeo_triplet"
 
@@ -97,6 +101,7 @@ elif [[ "$DATASET" == "triplet" ]]; then
   cp -r "$DATA_ROOT/vimeo_triplet/sequences/"* "$PROJECT_ROOT/train/"
   echo "Triplet dataset ready at $PROJECT_ROOT/train/"
 
+# === Invalid input ===
 else
   echo "Unknown dataset: $DATASET"
   echo "Usage: $0 [septuplet|triplet]"
