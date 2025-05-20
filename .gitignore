@@ -1,17 +1,45 @@
-*.pyc
-*.py~
-*.py#
+# === Python cache ===
+__pycache__/
+*.py[cod]
+*.so
 
+# === Virtual environments ===
+venv/
+.env
+.venv/
+
+# === Jupyter notebooks checkpointing ===
+.ipynb_checkpoints/
+
+# === RIFE dataset and training outputs ===
+train/
+val/
+inference_output/
 *.pkl
-data/
-output/*
-tests/*
-train/*
-train_log/*
-*.mp4
-
-test/
-.idea/
 *.npz
 
-*.zip
+# === Mounted dataset (centralized data dir) ===
+/ai-avatar-data/
+/mnt/ava_gen_4000/ai-avatar-data/
+vimeo_septuplet/
+vimeo_triplet/
+vimeo_septuplet.zip
+vimeo_triplet.zip
+tri_trainlist.txt
+tri_testlist.txt
+
+# === Model logs and checkpoints ===
+train_log/
+*.log
+*.ckpt
+*.pth
+
+# === Demo outputs ===
+*.gif
+*.mp4
+
+# === Editor / OS temp files ===
+.DS_Store
+*.swp
+*.bak
+*.tmp
